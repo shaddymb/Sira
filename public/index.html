@@ -2,195 +2,212 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
 <title>Sira — Trouve ton film</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --face:#d4d0c8;
-  --blue:#0a246a;
-  --s1:#ffffff;
-  --s2:#808080;
-  --s3:#404040;
-  --amber:#c8a000;
-}
-body{background:#008080;min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,sans-serif;font-size:12px}
+:root{--face:#d4d0c8;--blue:#0a246a;--s1:#fff;--s2:#808080;--s3:#404040;--amber:#c8a000}
+html,body{height:100%;overflow:hidden}
+body{background:#008080;font-family:'Segoe UI',Tahoma,Geneva,sans-serif;font-size:12px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 
 /* BOOT */
 #boot{position:fixed;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:'Courier New',monospace}
-#boot-title{font-size:42px;font-weight:700;color:#fff;letter-spacing:0.04em;margin-bottom:6px}
-#boot-sub{font-size:13px;color:#888;letter-spacing:0.15em;margin-bottom:40px}
-#boot-bar-wrap{width:280px;height:18px;border:1px solid #444;background:#111;overflow:hidden;margin-bottom:16px}
+#boot-title{font-size:clamp(28px,8vw,48px);font-weight:700;color:#fff;letter-spacing:0.04em;margin-bottom:6px}
+#boot-sub{font-size:clamp(10px,2.5vw,13px);color:#888;letter-spacing:0.15em;margin-bottom:36px;text-align:center;padding:0 20px}
+#boot-bar-wrap{width:min(280px,70vw);height:16px;border:1px solid #444;background:#111;overflow:hidden;margin-bottom:14px}
 #boot-bar{height:100%;width:0%;background:#0a246a;transition:width 0.15s}
-#boot-msg{font-size:11px;color:#555;letter-spacing:0.1em;height:16px}
-#boot-copy{position:absolute;bottom:24px;font-size:10px;color:#333;letter-spacing:0.1em}
+#boot-msg{font-size:clamp(9px,2vw,11px);color:#555;letter-spacing:0.08em;height:14px;text-align:center;padding:0 20px}
+#boot-copy{position:absolute;bottom:20px;font-size:10px;color:#333;letter-spacing:0.1em}
 .bcursor{animation:bc 1s step-end infinite}
 @keyframes bc{0%,100%{opacity:1}50%{opacity:0}}
 
-/* DESKTOP */
-#desktop{display:none;min-height:100vh;background:#008080;padding:12px;position:relative}
+/* DESKTOP WRAPPER */
+#desktop{display:none;width:100%;height:100%;position:relative;overflow:hidden}
 
-/* Desktop icons — vertical on left */
-#icons{position:absolute;top:12px;left:12px;display:flex;flex-direction:column;gap:8px;z-index:10}
-.dicon{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;width:60px;padding:4px}
+/* DESKTOP ICONS — left side, desktop only */
+#icons{position:absolute;top:12px;left:8px;display:flex;flex-direction:column;gap:8px;z-index:10}
+.dicon{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;width:58px;padding:3px}
 .dicon:hover .dicon-img{outline:1px dotted #fff}
-.dicon-img{width:38px;height:38px;display:flex;align-items:center;justify-content:center}
+.dicon-img{width:36px;height:36px;display:flex;align-items:center;justify-content:center}
 .dicon-lbl{font-size:10px;color:#fff;text-align:center;text-shadow:1px 1px 1px #000;line-height:1.3}
 
-/* Main window */
-#desk{width:100%;max-width:860px;margin:0 auto}
-#win{background:var(--face);border-top:2px solid var(--s1);border-left:2px solid var(--s1);border-right:2px solid var(--s3);border-bottom:2px solid var(--s3);box-shadow:3px 3px 8px rgba(0,0,0,0.5);animation:winopen 0.18s ease-out}
+/* WINDOW — centered, fills available space */
+#desk{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:min(860px, calc(100vw - 80px));
+  max-height:calc(100vh - 24px);
+  display:flex;flex-direction:column;
+}
+#win{
+  background:var(--face);
+  border-top:2px solid var(--s1);
+  border-left:2px solid var(--s1);
+  border-right:2px solid var(--s3);
+  border-bottom:2px solid var(--s3);
+  box-shadow:3px 3px 8px rgba(0,0,0,0.5);
+  animation:winopen 0.18s ease-out;
+  display:flex;flex-direction:column;
+  max-height:calc(100vh - 50px);
+  overflow:hidden;
+}
 @keyframes winopen{from{transform:scale(0.92);opacity:0}to{transform:scale(1);opacity:1}}
 
-#tbar{background:linear-gradient(to right,#0a246a,#a6b8e8);padding:3px 5px;display:flex;align-items:center;justify-content:space-between;user-select:none}
-#ttxt{color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;gap:5px}
+/* TITLE BAR */
+#tbar{background:linear-gradient(to right,#0a246a,#a6b8e8);padding:3px 5px;display:flex;align-items:center;justify-content:space-between;user-select:none;flex-shrink:0}
+#ttxt{color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;gap:5px;overflow:hidden}
+#ttxt-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #tico{width:15px;height:15px;background:var(--face);border:1px solid var(--s3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-#wbtns{display:flex;gap:2px}
+#wbtns{display:flex;gap:2px;flex-shrink:0}
 .wb{width:17px;height:15px;background:var(--face);border-top:1px solid var(--s1);border-left:1px solid var(--s1);border-right:1px solid var(--s3);border-bottom:1px solid var(--s3);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#000}
 .wb:active{border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1)}
 
-#mbar{background:var(--face);border-bottom:1px solid var(--s2);padding:2px 6px;display:flex;gap:2px}
+/* MENU BAR */
+#mbar{background:var(--face);border-bottom:1px solid var(--s2);padding:2px 6px;display:flex;gap:2px;flex-shrink:0}
 .mi{font-size:12px;color:#000;cursor:pointer;padding:2px 6px}
 .mi:hover{background:var(--blue);color:#fff}
 
-/* Toolbar — scrollable on mobile */
-#tbar2{background:var(--face);border-bottom:1px solid var(--s2);border-top:1px solid var(--s1);padding:3px 6px;display:flex;align-items:center;gap:4px;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+/* TOOLBAR */
+#tbar2{background:var(--face);border-bottom:1px solid var(--s2);border-top:1px solid var(--s1);padding:3px 6px;display:flex;align-items:center;gap:3px;overflow-x:auto;white-space:nowrap;scrollbar-width:none;flex-shrink:0}
 #tbar2::-webkit-scrollbar{display:none}
-.tb{background:var(--face);border-top:1px solid var(--s1);border-left:1px solid var(--s1);border-right:1px solid var(--s3);border-bottom:1px solid var(--s3);padding:3px 10px;font-size:11px;cursor:pointer;color:#000;font-family:inherit;white-space:nowrap;flex-shrink:0}
+.tb{background:var(--face);border-top:1px solid var(--s1);border-left:1px solid var(--s1);border-right:1px solid var(--s3);border-bottom:1px solid var(--s3);padding:3px 8px;font-size:11px;cursor:pointer;color:#000;font-family:inherit;white-space:nowrap;flex-shrink:0}
 .tb:active,.tb.on{border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1);background:#bbb8b0}
-.tsep{width:1px;height:18px;background:var(--s2);margin:0 2px;flex-shrink:0}
+.tsep{width:1px;height:16px;background:var(--s2);margin:0 2px;flex-shrink:0}
 
-/* Body layout */
-#body{display:flex;min-height:400px}
+/* BODY */
+#body{display:flex;flex:1;overflow:hidden;min-height:0}
 
-/* Sidebar — hidden on mobile */
-#side{width:140px;background:#c8c4bc;border-right:1px solid var(--s2);padding:6px;flex-shrink:0}
-#stit{font-size:10px;font-weight:700;color:var(--s3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;padding-bottom:3px;border-bottom:1px solid var(--s2)}
-.si{display:flex;align-items:center;gap:5px;padding:3px 5px;cursor:pointer;font-size:11px;color:#000;margin-bottom:1px}
+/* SIDEBAR */
+#side{width:136px;background:#c8c4bc;border-right:1px solid var(--s2);padding:6px;flex-shrink:0;overflow-y:auto}
+#stit{font-size:10px;font-weight:700;color:var(--s3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:5px;padding-bottom:3px;border-bottom:1px solid var(--s2)}
+.si{display:flex;align-items:center;gap:4px;padding:3px 4px;cursor:pointer;font-size:11px;color:#000;margin-bottom:1px;border-radius:0}
 .si:hover,.si.on{background:var(--blue);color:#fff}
-.si svg{flex-shrink:0;width:13px;height:13px}
 
-/* Content */
-#cnt{flex:1;padding:12px;min-width:0}
+/* CONTENT */
+#cnt{flex:1;overflow-y:auto;overflow-x:hidden;padding:10px;min-width:0;scrollbar-width:thin}
 
-/* Mobile filter pills — shown on mobile only */
+/* MOBILE PILLS */
 #mobile-filters{display:none;overflow-x:auto;white-space:nowrap;padding:0 0 8px;scrollbar-width:none;margin-bottom:8px}
 #mobile-filters::-webkit-scrollbar{display:none}
-.mpill{display:inline-block;background:var(--face);border-top:1px solid var(--s1);border-left:1px solid var(--s1);border-right:1px solid var(--s3);border-bottom:1px solid var(--s3);padding:3px 10px;font-size:11px;cursor:pointer;color:#000;font-family:inherit;margin-right:4px;white-space:nowrap}
+.mpill{display:inline-block;background:var(--face);border-top:1px solid var(--s1);border-left:1px solid var(--s1);border-right:1px solid var(--s3);border-bottom:1px solid var(--s3);padding:4px 10px;font-size:12px;cursor:pointer;color:#000;font-family:inherit;margin-right:4px;white-space:nowrap}
 .mpill.on{border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1);background:#bbb8b0;color:var(--blue);font-weight:700}
 
-/* Forms */
+/* FORMS */
 .fl{font-size:11px;font-weight:700;color:var(--s3);margin-bottom:3px}
-#mi2{width:100%;background:#fff;border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1);padding:6px 8px;font-family:inherit;font-size:13px;color:#000;outline:none;resize:none;min-height:70px;margin-bottom:8px;line-height:1.5}
+#mi2{width:100%;background:#fff;border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1);padding:6px 8px;font-family:inherit;font-size:13px;color:#000;outline:none;resize:none;min-height:68px;margin-bottom:8px;line-height:1.5}
 #mi2::placeholder{color:#aaa}
 #mi2:focus{border-top-color:var(--blue)}
 .chks{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
 .ck{display:flex;align-items:center;gap:3px;font-size:11px;color:#000;background:var(--face);border-top:1px solid var(--s1);border-left:1px solid var(--s1);border-right:1px solid var(--s3);border-bottom:1px solid var(--s3);padding:3px 7px;cursor:pointer}
 .ck input{cursor:pointer;width:11px;height:11px;accent-color:var(--blue)}
 
-/* Mode tabs */
-#mode-tabs{display:flex;gap:4px;margin-bottom:10px}
-.mode-tab{background:var(--face);border-top:1px solid var(--s1);border-left:1px solid var(--s1);border-right:1px solid var(--s3);border-bottom:1px solid var(--s3);padding:4px 12px;font-size:11px;cursor:pointer;color:#000;font-family:inherit}
+/* MODE TABS */
+#mode-tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+.mode-tab{background:var(--face);border-top:1px solid var(--s1);border-left:1px solid var(--s1);border-right:1px solid var(--s3);border-bottom:1px solid var(--s3);padding:4px 10px;font-size:11px;cursor:pointer;color:#000;font-family:inherit}
 .mode-tab.on{border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1);background:#bbb8b0;font-weight:700}
 
 #brow{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:4px}
-#sbtn{background:var(--face);border-top:2px solid var(--s1);border-left:2px solid var(--s1);border-right:2px solid var(--s3);border-bottom:2px solid var(--s3);padding:6px 20px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;color:#000}
+#sbtn{background:var(--face);border-top:2px solid var(--s1);border-left:2px solid var(--s1);border-right:2px solid var(--s3);border-bottom:2px solid var(--s3);padding:6px 18px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;color:#000}
 #sbtn:active{border-top:2px solid var(--s3);border-left:2px solid var(--s3);border-right:2px solid var(--s1);border-bottom:2px solid var(--s1)}
 #sbtn:disabled{color:#888;cursor:not-allowed}
 #sdisp{font-size:11px;color:var(--s3)}
 .su{color:var(--blue);font-weight:700}
 .se{color:#aaa}
 
-/* Loading */
+/* LOADING */
 #lp{display:none;padding:20px 0}
 #pw{width:100%;background:#fff;border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1);height:16px;overflow:hidden;margin:6px 0}
 #pb{height:100%;width:0%;background:var(--blue);transition:width 0.3s}
 #lmsg{font-size:11px;color:#555;margin-bottom:4px}
 
-/* Result */
+/* RESULT */
 #rp{display:none}
-.rh{background:var(--blue);color:#fff;padding:6px 10px;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:space-between}
-.rb{background:#fff;border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1);padding:14px}
+.rh{background:var(--blue);color:#fff;padding:6px 10px;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.rb{background:#fff;border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1);padding:12px}
 #ft{font-size:18px;font-weight:700;color:#000;margin-bottom:2px;line-height:1.2}
 #fy{font-size:11px;color:var(--s3);margin-bottom:10px}
 #strow{display:flex;gap:4px;margin-bottom:10px;align-items:center}
 #stlbl{font-size:10px;color:var(--s3);margin-left:6px}
 .st{font-size:20px;cursor:pointer;color:#ccc;user-select:none;line-height:1;transition:color 0.1s}
 .st.l{color:var(--amber)}
-#fe{font-size:13px;color:#222;line-height:1.8;margin-bottom:12px}
-#ract{display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid #ddd;padding-top:10px}
+#fe{font-size:13px;color:#222;line-height:1.75;margin-bottom:12px}
+#ract{display:flex;gap:5px;flex-wrap:wrap;border-top:1px solid #ddd;padding-top:10px}
 .rb2{background:var(--face);border-top:1px solid var(--s1);border-left:1px solid var(--s1);border-right:1px solid var(--s3);border-bottom:1px solid var(--s3);padding:5px 10px;font-size:12px;font-family:inherit;cursor:pointer;color:#000;text-decoration:none;display:inline-block}
 .rb2:active{border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1)}
 #donate-bar{display:none;margin-top:10px;padding:8px 10px;background:#fffbe6;border-top:1px solid #cccc00;border-left:1px solid #cccc00;border-right:1px solid #888;border-bottom:1px solid #888;font-size:11px;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 
-/* History */
+/* HISTORY */
 #hp{display:none}
 .ht{width:100%;border-collapse:collapse;font-size:12px}
 .ht th{background:var(--blue);color:#fff;padding:5px 8px;text-align:left;font-weight:700}
 .ht td{padding:5px 8px;border-bottom:1px solid #ddd;color:#000}
 .ht tr:nth-child(even) td{background:#f0f0f0}
 
-/* Paywall */
+/* PAYWALL */
 #pp{display:none}
-.dlg{background:var(--face);border-top:2px solid var(--s1);border-left:2px solid var(--s1);border-right:2px solid var(--s3);border-bottom:2px solid var(--s3);padding:20px;max-width:320px;margin:20px auto;text-align:center}
+.dlg{background:var(--face);border-top:2px solid var(--s1);border-left:2px solid var(--s1);border-right:2px solid var(--s3);border-bottom:2px solid var(--s3);padding:20px;max-width:300px;margin:16px auto;text-align:center}
 .dit{font-weight:700;font-size:14px;margin-bottom:6px}
 .dim2{font-size:11px;color:var(--s3);margin-bottom:14px;line-height:1.6}
-.dbt{background:var(--face);border-top:2px solid var(--s1);border-left:2px solid var(--s1);border-right:2px solid var(--s3);border-bottom:2px solid var(--s3);padding:6px 22px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;color:#000}
+.dbt{background:var(--face);border-top:2px solid var(--s1);border-left:2px solid var(--s1);border-right:2px solid var(--s3);border-bottom:2px solid var(--s3);padding:6px 20px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;color:#000}
 
-/* Discovery */
 #dp{display:none}
-
-/* Donate popup */
 #donate-popup{display:none}
-
-/* Error */
 #errmsg{font-size:11px;color:#cc0000;margin:4px 0;display:none}
 
-/* Status bar */
-#sbar{background:var(--face);border-top:1px solid var(--s2);padding:3px 10px;font-size:10px;color:var(--s3);display:flex;justify-content:space-between;align-items:center}
+/* STATUS BAR */
+#sbar{background:var(--face);border-top:1px solid var(--s2);padding:3px 10px;font-size:10px;color:var(--s3);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
 .sb-seg{background:var(--face);border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1);padding:1px 8px;font-size:10px;color:var(--s3)}
 
-/* Taskbar */
-#taskbar{background:var(--face);border-top:2px solid var(--s1);margin-top:6px;padding:3px 6px;display:flex;align-items:center;gap:5px}
+/* TASKBAR */
+#taskbar{position:absolute;bottom:0;left:0;right:0;background:var(--face);border-top:2px solid var(--s1);padding:3px 6px;display:flex;align-items:center;gap:5px;z-index:5}
 #startbtn{background:var(--face);border-top:2px solid var(--s1);border-left:2px solid var(--s1);border-right:2px solid var(--s3);border-bottom:2px solid var(--s3);padding:2px 8px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;color:#000;display:flex;align-items:center;gap:4px}
 #taskwin{background:var(--face);border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1);padding:2px 10px;font-size:11px;font-weight:700;color:#000}
 #clock{margin-left:auto;background:var(--face);border-top:1px solid var(--s3);border-left:1px solid var(--s3);border-right:1px solid var(--s1);border-bottom:1px solid var(--s1);padding:2px 8px;font-size:11px;color:#000}
 
-/* Toast */
-#toast2{position:fixed;bottom:56px;right:20px;background:var(--face);border-top:1px solid var(--s1);border-left:1px solid var(--s1);border-right:1px solid var(--s3);border-bottom:1px solid var(--s3);padding:6px 12px;font-size:11px;color:#000;display:none;z-index:999;box-shadow:2px 2px 0 var(--s2)}
+/* TOAST */
+#toast2{position:fixed;bottom:40px;right:16px;background:var(--face);border-top:1px solid var(--s1);border-left:1px solid var(--s1);border-right:1px solid var(--s3);border-bottom:1px solid var(--s3);padding:6px 12px;font-size:11px;color:#000;display:none;z-index:999;box-shadow:2px 2px 0 var(--s2)}
 
-/* Notification */
-#notif{position:fixed;bottom:60px;right:20px;background:var(--face);border-top:2px solid var(--s1);border-left:2px solid var(--s1);border-right:2px solid var(--s3);border-bottom:2px solid var(--s3);padding:10px 14px;width:220px;font-size:11px;display:none;z-index:998;box-shadow:2px 2px 4px rgba(0,0,0,0.3)}
+/* NOTIFICATION */
+#notif{position:fixed;bottom:48px;right:16px;background:var(--face);border-top:2px solid var(--s1);border-left:2px solid var(--s1);border-right:2px solid var(--s3);border-bottom:2px solid var(--s3);padding:10px 14px;width:220px;font-size:11px;display:none;z-index:998;box-shadow:2px 2px 4px rgba(0,0,0,0.3)}
 #notif-title{font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:5px}
 #notif-msg{color:var(--s3);line-height:1.4}
 #notif-close{position:absolute;top:4px;right:4px;width:14px;height:14px;background:var(--face);border-top:1px solid var(--s1);border-left:1px solid var(--s1);border-right:1px solid var(--s3);border-bottom:1px solid var(--s3);font-size:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:700}
 
-/* ── MOBILE ── */
+/* MOBILE */
 @media(max-width:600px){
-  #desktop{padding:6px}
+  body{justify-content:flex-start}
   #icons{display:none}
-  #desk{padding-left:0}
+  #desk{
+    position:static;
+    transform:none;
+    width:100vw;
+    max-height:100vh;
+    top:auto;left:auto;
+  }
+  #win{max-height:100vh;border-left:none;border-right:none}
   #side{display:none}
   #mobile-filters{display:block}
   #mbar{display:none}
-  #tbar2{gap:3px;padding:3px 4px}
-  .tb{padding:4px 8px;font-size:11px}
+  #tbar2{padding:4px 6px;gap:4px}
+  .tb{padding:5px 10px;font-size:12px}
   #cnt{padding:10px}
-  #mi2{font-size:14px;min-height:80px}
-  #sbtn{width:100%;padding:10px;font-size:14px;text-align:center}
+  #mi2{font-size:15px;min-height:80px}
+  #sbtn{width:100%;padding:12px;font-size:14px;text-align:center}
   #brow{flex-direction:column;align-items:stretch}
-  #sdisp{text-align:center;font-size:11px}
-  #ft{font-size:16px}
-  #fe{font-size:13px}
+  #sdisp{text-align:center}
+  #ft{font-size:17px}
+  #fe{font-size:13px;line-height:1.7}
+  .st{font-size:22px}
+  .rb2{padding:7px 12px;font-size:13px}
+  #ract{gap:6px}
+  #taskbar{display:none}
+  #notif{width:calc(100vw - 24px);right:12px;bottom:8px}
+  #toast2{right:12px;bottom:8px;width:calc(100vw - 24px)}
+  .mode-tab{padding:5px 10px;font-size:12px}
+  .mpill{padding:5px 12px;font-size:12px}
   .ht{font-size:11px}
   .ht td,.ht th{padding:4px 6px}
-  #taskbar{display:none}
-  #sbar{font-size:10px}
-  .rb2{padding:6px 10px;font-size:12px}
-  #ract{gap:5px}
-  .st{font-size:22px}
-  #notif{width:calc(100vw - 24px);right:12px;bottom:12px}
-  #toast2{right:12px;bottom:12px;width:calc(100vw - 24px)}
 }
 </style>
 </head>
@@ -208,46 +225,33 @@ body{background:#008080;min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,sa
 
   <div id="icons">
     <div class="dicon" id="ic-sira">
-      <div class="dicon-img">
-        <svg width="36" height="36" viewBox="0 0 36 36"><rect x="1" y="1" width="34" height="26" rx="1" fill="#0a246a"/><rect x="3" y="3" width="30" height="20" fill="#fff"/><rect x="1" y="27" width="34" height="8" fill="#c0c0c0" stroke="#808080" stroke-width="0.5"/><rect x="14" y="29" width="8" height="4" fill="#808080"/><circle cx="18" cy="13" r="6" fill="#0a246a"/><polygon points="15,10 15,16 22,13" fill="#c9a96e"/></svg>
-      </div>
+      <div class="dicon-img"><svg width="36" height="36" viewBox="0 0 36 36"><rect x="1" y="1" width="34" height="26" rx="1" fill="#0a246a"/><rect x="3" y="3" width="30" height="20" fill="#fff"/><rect x="1" y="27" width="34" height="8" fill="#c0c0c0" stroke="#808080" stroke-width="0.5"/><rect x="14" y="29" width="8" height="4" fill="#808080"/><circle cx="18" cy="13" r="6" fill="#0a246a"/><polygon points="15,10 15,16 22,13" fill="#c9a96e"/></svg></div>
       <div class="dicon-lbl">Sira</div>
     </div>
     <div class="dicon" id="ic-donate">
-      <div class="dicon-img">
-        <svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="2" fill="#d4d0c8" stroke="#808080" stroke-width="1"/><path d="M18 27C18 27 7 20 7 13a5.5 5.5 0 0 1 11 0 5.5 5.5 0 0 1 11 0c0 7-11 14-11 14z" fill="#cc4466" stroke="#aa2244" stroke-width="0.5"/></svg>
-      </div>
+      <div class="dicon-img"><svg width="36" height="36" viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="2" fill="#d4d0c8" stroke="#808080" stroke-width="1"/><path d="M18 27C18 27 7 20 7 13a5.5 5.5 0 0 1 11 0 5.5 5.5 0 0 1 11 0c0 7-11 14-11 14z" fill="#cc4466" stroke="#aa2244" stroke-width="0.5"/></svg></div>
       <div class="dicon-lbl">Soutenir</div>
     </div>
     <div class="dicon" id="ic-trash">
-      <div class="dicon-img">
-        <svg width="34" height="36" viewBox="0 0 34 36"><rect x="4" y="8" width="26" height="26" rx="1" fill="#d4d0c8" stroke="#808080" stroke-width="1"/><rect x="6" y="10" width="22" height="22" fill="#fff" stroke="#ccc" stroke-width="0.5"/><rect x="11" y="3" width="12" height="6" rx="1" fill="#d4d0c8" stroke="#808080" stroke-width="1"/><rect x="2" y="7" width="30" height="4" fill="#d4d0c8" stroke="#808080" stroke-width="1"/></svg>
-      </div>
+      <div class="dicon-img"><svg width="34" height="36" viewBox="0 0 34 36"><rect x="4" y="8" width="26" height="26" rx="1" fill="#d4d0c8" stroke="#808080" stroke-width="1"/><rect x="6" y="10" width="22" height="22" fill="#fff" stroke="#ccc" stroke-width="0.5"/><rect x="11" y="3" width="12" height="6" rx="1" fill="#d4d0c8" stroke="#808080" stroke-width="1"/><rect x="2" y="7" width="30" height="4" fill="#d4d0c8" stroke="#808080" stroke-width="1"/></svg></div>
       <div class="dicon-lbl">Corbeille</div>
     </div>
   </div>
 
-  <div id="desk" style="padding-left:80px">
+  <div id="desk">
   <div id="win">
-
     <div id="tbar">
       <div id="ttxt">
         <div id="tico"><svg width="11" height="11" viewBox="0 0 11 11"><rect x="0" y="0" width="11" height="8" fill="#0a246a"/><rect x="0" y="8" width="11" height="3" fill="#c0c0c0"/></svg></div>
-        Sira — Recommandation Cinématographique
+        <span id="ttxt-label">Sira — Recommandation Cinématographique</span>
       </div>
       <div id="wbtns">
-        <div class="wb">_</div>
-        <div class="wb">&#9633;</div>
-        <div class="wb" id="close-btn">&#10005;</div>
+        <div class="wb">_</div><div class="wb">&#9633;</div><div class="wb" id="close-btn">&#10005;</div>
       </div>
     </div>
 
     <div id="mbar">
-      <span class="mi">Fichier</span>
-      <span class="mi">Édition</span>
-      <span class="mi">Affichage</span>
-      <span class="mi">Film</span>
-      <span class="mi">?</span>
+      <span class="mi">Fichier</span><span class="mi">Édition</span><span class="mi">Affichage</span><span class="mi">Film</span><span class="mi">?</span>
     </div>
 
     <div id="tbar2">
@@ -277,8 +281,6 @@ body{background:#008080;min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,sa
       </div>
 
       <div id="cnt">
-
-        <!-- Mobile filters -->
         <div id="mobile-filters">
           <button class="mpill on" data-f="">Tous</button>
           <button class="mpill" data-f="film d animation occidental">Animation</button>
@@ -291,23 +293,19 @@ body{background:#008080;min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,sa
         </div>
 
         <div id="ip">
-          <!-- Mode tabs -->
           <div id="mode-tabs">
             <button class="mode-tab on" data-mode="solo">&#128100; Solo</button>
             <button class="mode-tab" data-mode="soiree">&#128101; Soirée</button>
             <button class="mode-tab" data-mode="describe">&#127902; Je décris un film</button>
           </div>
-
           <div class="fl" id="input-label">Décris ton humeur ou ta situation :</div>
           <textarea id="mi2" placeholder="Ex : je viens de rater un exam, je me sens seul un dimanche, j'ai besoin de motivation…" rows="3"></textarea>
-
           <div class="chks" id="extra-opts">
             <label class="ck"><input type="checkbox" value="noir et blanc"> Noir &amp; Blanc</label>
             <label class="ck"><input type="checkbox" value="moins de 90 minutes"> &lt; 90 min</label>
             <label class="ck"><input type="checkbox" value="film muet"> Film muet</label>
             <label class="ck"><input type="checkbox" value="sous-titré"> Sous-titré</label>
           </div>
-
           <div id="errmsg">&#9888; Erreur — réessaie.</div>
           <div id="brow">
             <button id="sbtn">&#128269; Rechercher un film</button>
@@ -347,7 +345,7 @@ body{background:#008080;min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,sa
         </div>
 
         <div id="hp">
-          <div class="rh"><span>Historique de session</span><button class="rb2" id="hback" style="color:#fff;background:transparent;border-color:rgba(255,255,255,0.4);font-size:10px">&#8592; Retour</button></div>
+          <div class="rh"><span>Historique</span><button class="rb2" id="hback" style="color:#fff;background:transparent;border-color:rgba(255,255,255,0.4);font-size:10px">&#8592; Retour</button></div>
           <div style="background:#fff;border-top:1px solid #888;border-left:1px solid #888;">
             <div id="hemp" style="font-size:11px;color:#888;padding:10px">Aucune recommandation pour l'instant.</div>
             <table class="ht" id="htable" style="display:none"><thead><tr><th>Film</th><th>Année</th><th>Note</th></tr></thead><tbody id="hbody"></tbody></table>
@@ -356,10 +354,10 @@ body{background:#008080;min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,sa
 
         <div id="pp">
           <div class="dlg">
-            <div style="font-size:28px;margin-bottom:10px">&#127916;</div>
-            <div class="dit">Tes 10 recos gratuites du mois sont épuisées</div>
-            <div class="dim2">Sira est gratuit et le restera. Tes recos se rechargent chaque mois.<br>Si tu veux soutenir le projet, c'est par ici.</div>
-            <button class="dbt" id="paybtn" style="font-size:13px;padding:6px 24px">&#9829; Soutenir Sira</button>
+            <div style="font-size:26px;margin-bottom:8px">&#127916;</div>
+            <div class="dit">Tes 10 recos du mois sont épuisées</div>
+            <div class="dim2">Sira est gratuit et le restera.<br>Tes recos se rechargent chaque mois.<br>Tu peux soutenir le projet si tu le souhaites.</div>
+            <button class="dbt" id="paybtn" style="font-size:13px;padding:6px 20px">&#9829; Soutenir Sira</button>
             <div style="font-size:10px;color:#999;margin-top:8px">Montant libre · Aucun abonnement</div>
           </div>
         </div>
@@ -378,13 +376,13 @@ body{background:#008080;min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,sa
         </div>
 
         <div id="donate-popup">
-          <div class="dlg" style="margin:20px auto">
-            <div style="font-size:28px;margin-bottom:8px">&#9829;</div>
+          <div class="dlg" style="margin:16px auto">
+            <div style="font-size:26px;margin-bottom:8px">&#9829;</div>
             <div class="dit">Sira t'a trouvé son film ?</div>
             <div class="dim2">Sira est gratuit et le restera.<br>Si tu veux soutenir le projet, c'est par ici.</div>
             <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-              <button class="dbt" id="donate-yes">Soutenir Sira &#9829;</button>
-              <button class="dbt" id="donate-no" style="border-color:var(--s2);color:var(--s3)">Peut-être plus tard</button>
+              <button class="dbt" id="donate-yes">Soutenir &#9829;</button>
+              <button class="dbt" id="donate-no" style="border-color:var(--s2);color:var(--s3)">Plus tard</button>
             </div>
           </div>
         </div>
@@ -394,19 +392,17 @@ body{background:#008080;min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,sa
 
     <div id="sbar">
       <span id="sl">Prêt.</span>
-      <div style="display:flex;gap:4px">
-        <span class="sb-seg">Sira v2.0</span>
-        <span class="sb-seg">50 000+ films</span>
-      </div>
+      <div style="display:flex;gap:4px"><span class="sb-seg">Sira v2.0</span><span class="sb-seg">50 000+ films</span></div>
     </div>
-
   </div>
+
   <div id="taskbar">
-    <button id="startbtn"><svg width="14" height="14" viewBox="0 0 14 14"><rect x="0" y="0" width="6" height="6" fill="#ff0000"/><rect x="8" y="0" width="6" height="6" fill="#00cc00"/><rect x="0" y="8" width="6" height="6" fill="#0000ff"/><rect x="8" y="8" width="6" height="6" fill="#ffff00"/></svg><strong>Démarrer</strong></button>
+    <button id="startbtn"><svg width="14" height="14" viewBox="0 0 14 14"><rect x="0" y="0" width="6" height="6" fill="#f00"/><rect x="8" y="0" width="6" height="6" fill="#0c0"/><rect x="0" y="8" width="6" height="6" fill="#00f"/><rect x="8" y="8" width="6" height="6" fill="#ff0"/></svg><strong>Démarrer</strong></button>
     <div id="taskwin">&#127916; Sira</div>
     <div id="clock">00:00</div>
   </div>
   </div>
+
 </div>
 
 <div id="notif">
@@ -419,14 +415,14 @@ body{background:#008080;min-height:100vh;font-family:'Segoe UI',Tahoma,Geneva,sa
 <script>
 let audioCtx=null,soundOn=true;
 function getCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
-function playTone(freq,dur,vol,type,delay){type=type||'sine';delay=delay||0;if(!soundOn)return;try{const ctx=getCtx(),osc=ctx.createOscillator(),gain=ctx.createGain();osc.connect(gain);gain.connect(ctx.destination);osc.type=type;osc.frequency.value=freq;gain.gain.setValueAtTime(0,ctx.currentTime+delay);gain.gain.linearRampToValueAtTime(vol,ctx.currentTime+delay+0.01);gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+delay+dur);osc.start(ctx.currentTime+delay);osc.stop(ctx.currentTime+delay+dur+0.05)}catch(e){}}
+function playTone(f,d,v,t,dl){t=t||'sine';dl=dl||0;if(!soundOn)return;try{const c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=t;o.frequency.value=f;g.gain.setValueAtTime(0,c.currentTime+dl);g.gain.linearRampToValueAtTime(v,c.currentTime+dl+0.01);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dl+d);o.start(c.currentTime+dl);o.stop(c.currentTime+dl+d+0.05)}catch(e){}}
 function playBoot(){[{f:523,d:0.18,v:0.3,dl:0},{f:659,d:0.18,v:0.3,dl:0.2},{f:784,d:0.18,v:0.3,dl:0.4},{f:1047,d:0.4,v:0.35,dl:0.6},{f:880,d:0.15,v:0.2,dl:0.65},{f:988,d:0.5,v:0.3,dl:0.8}].forEach(n=>playTone(n.f,n.d,n.v,'sine',n.dl))}
 function playClick(){playTone(800,0.04,0.15,'square')}
 function playSuccess(){[{f:523,d:0.1,dl:0},{f:659,d:0.1,dl:0.1},{f:784,d:0.25,dl:0.2}].forEach(n=>playTone(n.f,n.d,0.2,'sine',n.dl))}
 function playError(){[{f:220,d:0.15,dl:0},{f:196,d:0.15,dl:0.15}].forEach(n=>playTone(n.f,n.d,0.25,'sawtooth',n.dl))}
 function playNotif(){[{f:880,d:0.08,dl:0},{f:1047,d:0.12,dl:0.1}].forEach(n=>playTone(n.f,n.d,0.15,'sine',n.dl))}
 
-const bootMsgs=['Sira BIOS v2.0...','Vérification de la mémoire cinématographique...','Chargement de la base de données (50 000+ films)...','Initialisation du moteur d\'analyse émotionnelle...','Connexion au serveur de recommandations...','Système prêt.'];
+const bootMsgs=['Sira BIOS v2.0...','Vérification cinématographique...','Chargement (50 000+ films)...','Initialisation moteur émotionnel...','Connexion serveur...','Système prêt.'];
 let bootIdx=0;
 const bootTxt=document.getElementById('boot-txt'),bootBar=document.getElementById('boot-bar');
 function bootStep(){if(bootIdx>=bootMsgs.length){setTimeout(endBoot,600);return}bootTxt.textContent=bootMsgs[bootIdx];bootBar.style.width=((bootIdx+1)/bootMsgs.length*100)+'%';bootIdx++;setTimeout(bootStep,bootIdx===1?200:320)}
@@ -435,7 +431,6 @@ setTimeout(bootStep,400);
 
 function showNotif(title,msg){playNotif();document.getElementById('notif-t').textContent=title;document.getElementById('notif-msg').textContent=msg;const n=document.getElementById('notif');n.style.display='block';setTimeout(()=>n.style.display='none',5000)}
 document.getElementById('notif-close').addEventListener('click',()=>document.getElementById('notif').style.display='none');
-
 function updateClock(){const n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')}
 updateClock();setInterval(updateClock,30000);
 
@@ -454,16 +449,16 @@ const mi2=document.getElementById('mi2'),sbtn=document.getElementById('sbtn'),er
 
 async function getRec(mood,isDescribe){
   const sys=isDescribe
-    ? `Tu es un expert en cinéma. L'utilisateur décrit un film qu'il a en tête ou dont il se souvient vaguement. Trouve le film exact qui correspond à cette description.\nRéponds UNIQUEMENT en JSON sans markdown : {"title":"...","year":"...","explanation":"Confirme que c'est bien ce film et explique pourquoi en 2-3 phrases","letterboxd":"url letterboxd search","trailer":"url youtube trailer"}`
-    : `Tu es un cinéphile passionné et empathique. Recommande UN SEUL film selon l'état émotionnel décrit.\nRègles : film non évident, transforme l'émotion, parle à la 2e personne, chaleureux et précis.\n- Recommande UNIQUEMENT un long métrage de fiction sauf si un filtre spécifique le demande.${af?'\n- Format requis : '+af+'. Respecte absolument.':''}${getExtra().length?'\n- Options : '+getExtra().join(', '):''}\n${seen.length?'- Déjà vus : '+seen.join(', '):''}\nGénère aussi lien Letterboxd et YouTube trailer.\nRéponds UNIQUEMENT en JSON sans markdown : {"title":"...","year":"...","explanation":"3-4 phrases","letterboxd":"url","trailer":"url"}`;
+    ?`Tu es un expert en cinéma. L'utilisateur décrit un film dont il se souvient vaguement. Trouve le film exact.\nRéponds UNIQUEMENT en JSON sans markdown : {"title":"...","year":"...","explanation":"Confirme et explique en 2-3 phrases","letterboxd":"url","trailer":"url"}`
+    :`Tu es un cinéphile passionné et empathique. Recommande UN SEUL film selon l'état émotionnel décrit.\nRègles : film non évident, transforme l'émotion, parle à la 2e personne, chaleureux et précis.\n- Recommande UNIQUEMENT un long métrage de fiction sauf si un filtre le demande.${af?'\n- Format : '+af+'. Respecte absolument.':''}${getExtra().length?'\n- Options : '+getExtra().join(', '):''}${seen.length?'\n- Déjà vus : '+seen.join(', '):''}${mode==='soiree'?'\n- Film pour regarder en groupe.':''}\nGénère lien Letterboxd et YouTube trailer.\nRéponds UNIQUEMENT en JSON sans markdown : {"title":"...","year":"...","explanation":"3-4 phrases","letterboxd":"url","trailer":"url"}`;
   const r=await fetch('/api/recommend',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mood,filters:isDescribe?[]:[af,...getExtra()].filter(Boolean),mode,seen,systemOverride:isDescribe?sys:null})});
-  if(!r.ok)throw new Error('api error');
+  if(!r.ok)throw new Error('error');
   return await r.json();
 }
 
 async function analyze(mood,isDescribe){
-  playClick();errmsg.style.display='none';sbtn.disabled=true;show('lp');setS('Analyse en cours…');
-  const msgs=['Lecture de l\'état émotionnel…','Scan de la base de données…','Corrélation psycho-narrative…','Sélection du film optimal…','Finalisation…'];
+  playClick();errmsg.style.display='none';sbtn.disabled=true;show('lp');setS('Analyse…');
+  const msgs=['Lecture de l\'humeur…','Scan base de données…','Corrélation narrative…','Sélection…','Finalisation…'];
   let pct=0;
   const iv=setInterval(()=>{pct=Math.min(pct+Math.random()*18,90);pb.style.width=pct+'%';lmsg.textContent=msgs[Math.min(Math.floor(pct/20),4)]},380);
   let rec;
@@ -473,6 +468,7 @@ async function analyze(mood,isDescribe){
     used++;updSlots();crec=rec;cmood=mood;crat=0;
     document.getElementById('ft').textContent=rec.title;
     document.getElementById('rht').textContent=rec.title+' ('+rec.year+')';
+    document.getElementById('ttxt-label').textContent=rec.title+' — Sira';
     document.getElementById('fy').textContent=rec.year;
     document.getElementById('fe').textContent=rec.explanation;
     const lbx='https://letterboxd.com/search/'+encodeURIComponent(rec.title+' '+rec.year)+'/';
@@ -480,9 +476,9 @@ async function analyze(mood,isDescribe){
     document.getElementById('lbx').href=rec.letterboxd||lbx;
     document.getElementById('ytt').href=rec.trailer||yt;
     hlSt(0);hist.push({title:rec.title,year:rec.year,mood:mood.slice(0,40),rating:0});
-    show('rp');setS('Trouvé : '+rec.title+' ('+rec.year+')');sbtn.disabled=false;pb.style.width='0%';
+    show('rp');setS('Trouvé : '+rec.title);sbtn.disabled=false;pb.style.width='0%';
     playSuccess();
-    if(used>=5){const db=document.getElementById('donate-bar');db.style.display='flex'}
+    if(used>=5){document.getElementById('donate-bar').style.display='flex'}
     if(used===3){setTimeout(()=>{show('donate-popup');setS('Sira t\'a trouvé son film ?')},1500)}
     setTimeout(()=>showNotif('Film trouvé !',rec.title+' ('+rec.year+')'),400);
   },350);
@@ -495,34 +491,21 @@ document.querySelectorAll('.st').forEach(s=>{
   s.addEventListener('click',()=>{crat=parseInt(s.dataset.v);hlSt(crat);playTone(880+crat*80,0.08,0.1,'sine');if(hist.length)hist[hist.length-1].rating=crat});
 });
 
-// Mode tabs
 document.querySelectorAll('.mode-tab').forEach(b=>{
   b.addEventListener('click',()=>{
-    playClick();
-    document.querySelectorAll('.mode-tab').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on');mode=b.dataset.mode;
-    const label=document.getElementById('input-label');
-    if(mode==='describe'){
-      mi2.placeholder='Décris le film dont tu te souviens... Ex: "un film avec un garçon qui voit des morts", "le film des années 90 avec un chien qui revient à la vie"';
-      label.textContent='Décris le film que tu cherches :';
-      sbtn.textContent='🔍 Identifier ce film';
-    } else if(mode==='soiree'){
-      mi2.placeholder='Décris l\'ambiance de la soirée, le groupe, l\'humeur générale…';
-      label.textContent='Décris l\'ambiance de la soirée :';
-      sbtn.textContent='🔍 Rechercher un film';
-    } else {
-      mi2.placeholder='Ex : je viens de rater un exam, je me sens seul un dimanche…';
-      label.textContent='Décris ton humeur ou ta situation :';
-      sbtn.textContent='🔍 Rechercher un film';
-    }
+    playClick();document.querySelectorAll('.mode-tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=b.dataset.mode;
+    const lbl=document.getElementById('input-label');
+    if(mode==='describe'){mi2.placeholder='Décris le film dont tu te souviens... Ex: "un film avec un garçon qui voit des morts"';lbl.textContent='Décris le film que tu cherches :';sbtn.textContent='🔍 Identifier ce film'}
+    else if(mode==='soiree'){mi2.placeholder='Décris l\'ambiance de la soirée…';lbl.textContent='Ambiance de la soirée :';sbtn.textContent='🔍 Rechercher un film'}
+    else{mi2.placeholder='Ex : je viens de rater un exam, je me sens seul…';lbl.textContent='Décris ton humeur ou ta situation :';sbtn.textContent='🔍 Rechercher un film'}
   });
 });
 
 sbtn.addEventListener('click',async()=>{const m=mi2.value.trim();if(!m)return;if(used>=MAX){show('pp');playError();return}await analyze(m,mode==='describe')});
 mi2.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sbtn.click()}});
 document.getElementById('seenb').addEventListener('click',async()=>{playClick();if(used>=MAX){show('pp');return}if(crec)seen.push(crec.title);await analyze(cmood,false)});
-document.getElementById('agnb').addEventListener('click',()=>{playClick();if(used>=MAX){show('pp');return}mi2.value='';show('ip');setS('Prêt.')});
-document.getElementById('shr').addEventListener('click',()=>{playClick();if(!crec)return;const t='Sira me recommande "'+crec.title+'" ('+crec.year+').\nTrouve ton film sur sira-ten.vercel.app';if(navigator.clipboard)navigator.clipboard.writeText(t);toast('Copié !')});
+document.getElementById('agnb').addEventListener('click',()=>{playClick();if(used>=MAX){show('pp');return}mi2.value='';document.getElementById('ttxt-label').textContent='Sira — Recommandation Cinématographique';show('ip');setS('Prêt.')});
+document.getElementById('shr').addEventListener('click',()=>{playClick();if(!crec)return;const t='Sira me recommande "'+crec.title+'" ('+crec.year+').\nsira-ten.vercel.app';if(navigator.clipboard)navigator.clipboard.writeText(t);toast('Copié !')});
 document.getElementById('tb-hist').addEventListener('click',()=>{
   playClick();const body=document.getElementById('hbody'),emp=document.getElementById('hemp'),htab=document.getElementById('htable');
   body.innerHTML='';
@@ -531,36 +514,34 @@ document.getElementById('tb-hist').addEventListener('click',()=>{
   show('hp');setS('Historique');
 });
 document.getElementById('hback').addEventListener('click',()=>{playClick();crec?show('rp'):show('ip');setS(crec?'Trouvé : '+crec.title:'Prêt.')});
-document.getElementById('tb-new').addEventListener('click',()=>{playClick();if(used>=MAX){show('pp');return}mi2.value='';show('ip');setS('Prêt.')});
+document.getElementById('tb-new').addEventListener('click',()=>{playClick();if(used>=MAX){show('pp');return}mi2.value='';document.getElementById('ttxt-label').textContent='Sira — Recommandation Cinématographique';show('ip');setS('Prêt.')});
 document.getElementById('tb-random').addEventListener('click',()=>{playClick();show('dp');setS('Découverte aléatoire')});
 document.getElementById('tb-sound').addEventListener('click',function(){soundOn=!soundOn;this.textContent=(soundOn?'🔊':'🔇')+' Son';playClick()});
 document.getElementById('dp-back').addEventListener('click',()=>{playClick();crec?show('rp'):show('ip');setS('Prêt.')});
 document.getElementById('rand-any').addEventListener('click',async()=>{
   playClick();if(used>=MAX){show('pp');return}
-  const moods=['surprends-moi avec un film que je n\'aurais jamais choisi','recommande-moi un chef-d\'oeuvre méconnu','je veux un film qui me marque pour longtemps','choisis pour moi, n\'importe quoi d\'exceptionnel'];
-  await analyze(moods[Math.floor(Math.random()*moods.length)],false);
+  const m=['surprends-moi avec un film que je n\'aurais jamais choisi','recommande-moi un chef-d\'oeuvre méconnu','je veux un film qui me marque pour longtemps','choisis pour moi, n\'importe quoi d\'exceptionnel'];
+  await analyze(m[Math.floor(Math.random()*m.length)],false);
 });
 document.getElementById('rand-mood-btn').addEventListener('click',()=>{playClick();document.getElementById('rand-mood-input').style.display='block';document.getElementById('rand-go').style.display='inline-block'});
 document.getElementById('rand-go').addEventListener('click',async()=>{playClick();const m=document.getElementById('rand-mood-input').value.trim();if(!m||used>=MAX)return;await analyze(m,false)});
-document.getElementById('paybtn').addEventListener('click',()=>{playClick();window.open('https://buy.stripe.com/dRm14oe3y7D8bhh4cm3Ru00','_blank')});
-document.getElementById('donate-btn').addEventListener('click',()=>{playClick();window.open('https://buy.stripe.com/dRm14oe3y7D8bhh4cm3Ru00','_blank')});
-document.getElementById('donate-yes').addEventListener('click',()=>{playClick();window.open('https://buy.stripe.com/dRm14oe3y7D8bhh4cm3Ru00','_blank');show('rp')});
+const stripeUrl='https://buy.stripe.com/dRm14oe3y7D8bhh4cm3Ru00';
+document.getElementById('paybtn').addEventListener('click',()=>{playClick();window.open(stripeUrl,'_blank')});
+document.getElementById('donate-btn').addEventListener('click',()=>{playClick();window.open(stripeUrl,'_blank')});
+document.getElementById('donate-yes').addEventListener('click',()=>{playClick();window.open(stripeUrl,'_blank');show('rp')});
 document.getElementById('donate-no').addEventListener('click',()=>{playClick();show('rp')});
-document.getElementById('ic-donate-side').addEventListener('click',()=>{playClick();window.open('https://buy.stripe.com/dRm14oe3y7D8bhh4cm3Ru00','_blank')});
-if(document.getElementById('ic-donate'))document.getElementById('ic-donate').addEventListener('dblclick',()=>{playClick();window.open('https://buy.stripe.com/dRm14oe3y7D8bhh4cm3Ru00','_blank')});
-if(document.getElementById('ic-sira'))document.getElementById('ic-sira').addEventListener('dblclick',()=>{playClick();const w=document.getElementById('win');w.style.display='';w.style.transform='';w.style.opacity=''});
-if(document.getElementById('ic-trash'))document.getElementById('ic-trash').addEventListener('dblclick',()=>{playClick();document.getElementById('tb-hist').click()});
+document.getElementById('ic-donate-side').addEventListener('click',()=>{playClick();window.open(stripeUrl,'_blank')});
+document.getElementById('ic-donate').addEventListener('dblclick',()=>{playClick();window.open(stripeUrl,'_blank')});
+document.getElementById('ic-sira').addEventListener('dblclick',()=>{playClick();const w=document.getElementById('win');w.style.display='';w.style.transform='';w.style.opacity=''});
+document.getElementById('ic-trash').addEventListener('dblclick',()=>{playClick();document.getElementById('tb-hist').click()});
 document.getElementById('close-btn').addEventListener('click',()=>{playClick();const w=document.getElementById('win');w.style.transition='transform 0.15s,opacity 0.15s';w.style.transform='scale(0.9)';w.style.opacity='0';setTimeout(()=>w.style.display='none',160)});
 document.querySelectorAll('.mi').forEach(m=>m.addEventListener('click',()=>playClick()));
 document.querySelectorAll('.wb').forEach(w=>w.addEventListener('click',()=>playClick()));
 
-// Sidebar + mobile pills filter sync
 document.querySelectorAll('#side .si').forEach(item=>{
   item.addEventListener('click',()=>{
     if(item.id==='ic-donate-side')return;
-    playClick();
-    document.querySelectorAll('#side .si').forEach(i=>i.classList.remove('on'));
-    item.classList.add('on');af=item.dataset.f||'';
+    playClick();document.querySelectorAll('#side .si').forEach(i=>i.classList.remove('on'));item.classList.add('on');af=item.dataset.f||'';
     document.querySelectorAll('.mpill').forEach(p=>p.classList.toggle('on',p.dataset.f===af));
   });
 });
