@@ -303,19 +303,24 @@
       <button class="tb" id="tb-hist">&#128203; Historique</button>
       <div class="tsep"></div>
       <button class="tb" id="tb-sound">&#128266; Son : ON</button>
+      <div class="tsep"></div>
+      <button class="tb" id="tb-random">&#127922; Surprise</button>
     </div>
 
     <div id="body">
       <div id="side">
         <div id="stit">Filtres</div>
         <div class="si on" data-f=""><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="1" width="11" height="9" rx="1"/><path d="M1 4h11"/></svg>Tous les films</div>
-        <div class="si" data-f="animation"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6.5" cy="6.5" r="5.5"/><path d="M5 5l4 1.5L5 8" fill="currentColor" stroke="none"/></svg>Animation</div>
-        <div class="si" data-f="animé japonais"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 10L6.5 2l4.5 8"/><path d="M3.5 7h6"/></svg>Animé japonais</div>
+        <div class="si" data-f="film d animation occidental"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6.5" cy="6.5" r="5.5"/><path d="M5 5l4 1.5L5 8" fill="currentColor" stroke="none"/></svg>Animation</div>
+        <div class="si" data-f="long metrage animation japonais pas une serie"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2 10L6.5 2l4.5 8"/><path d="M3.5 7h6"/></svg>Anime film</div>
+        <div class="si" data-f="serie animee japonaise pas un film"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2" width="11" height="7" rx="1"/><circle cx="6.5" cy="5" r="2" fill="none" stroke="currentColor"/><path d="M4 10.5h5"/></svg>Anime serie</div>
         <div class="si" data-f="film français"><svg viewBox="0 0 13 13"><rect x="1" y="3" width="3.7" height="7" fill="#002395"/><rect x="4.7" y="3" width="3.6" height="7" fill="#fff"/><rect x="8.3" y="3" width="3.7" height="7" fill="#ED2939"/></svg>Film français</div>
-        <div class="si" data-f="film de cinéma sorti avant 1980"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2" width="11" height="9"/><path d="M1 5.5h11M4.5 2v9" stroke-dasharray="2,1"/></svg>Avant 1980</div>
+        <div class="si" data-f="film de cinema sorti avant 1980"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2" width="11" height="9"/><path d="M1 5.5h11M4.5 2v9" stroke-dasharray="2,1"/></svg>Avant 1980</div>
         <div class="si" data-f="documentaire"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="1" width="9" height="11"/><path d="M4 4h5M4 6.5h5M4 9h3"/></svg>Documentaire</div>
-        <div class="si" data-f="série télévisée"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2" width="11" height="8" rx="1"/><path d="M4.5 11h4M6.5 10v1"/></svg>Série</div>
-        <div class="si" data-f="court métrage"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 3.5v3l2 1.5"/></svg>Court métrage</div>
+        <div class="si" data-f="serie televisee"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="1" y="2" width="11" height="8" rx="1"/><path d="M4.5 11h4M6.5 10v1"/></svg>Serie</div>
+        <div class="si" data-f="court metrage"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 3.5v3l2 1.5"/></svg>Court metrage</div>
+        <div style="border-top:1px solid #808080;margin:5px 0"></div>
+        <div class="si" id="ic-donate-side"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M6.5 11C6.5 11 1.5 7.5 1.5 4.5a2.5 2.5 0 0 1 5 0 2.5 2.5 0 0 1 5 0c0 3-5 6.5-5 6.5z"/></svg>Soutenir</div>
       </div>
 
       <div id="cnt">
@@ -386,10 +391,35 @@
             <div style="margin-bottom:10px">
               <svg width="40" height="40" viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="28" rx="1" fill="#0a246a"/><rect x="4" y="4" width="32" height="22" fill="#fff"/><rect x="2" y="30" width="36" height="8" fill="#c0c0c0" stroke="#808080" stroke-width="0.5"/><rect x="16" y="32" width="8" height="4" fill="#808080"/></svg>
             </div>
-            <div class="dit">Tu as utilisé tes 10 recos gratuites</div>
-            <div class="dim2">Sira est gratuit.<br>Si tu as trouvé ton film parfait, tu peux soutenir le projet avec ce que tu veux.</div>
+            <div class="dit">Tu as utilisé tes 10 recos gratuites du mois</div>
+            <div class="dim2">Tes recos gratuites se rechargent chaque mois.<br>Sira est gratuit — si tu as trouvé ton film parfait, tu peux soutenir le projet avec ce que tu veux.</div>
             <button class="dbt" id="paybtn" style="font-size:13px;padding:6px 24px">&#9829; Soutenir Sira</button>
             <div style="font-size:10px;color:#999;margin-top:8px">Montant libre · Aucun abonnement</div>
+          </div>
+        </div>
+
+        <div id="dp" style="display:none">
+          <div class="rh"><span>Decouverte aleatoire</span><span style="font-size:10px;font-weight:400;opacity:0.8">Surprends-moi</span></div>
+          <div class="rb" style="text-align:center;padding:20px">
+            <div style="font-size:13px;color:#555;margin-bottom:14px">Pas d idee de film ? Laisse Sira choisir pour toi.</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:14px">
+              <button class="rb2" id="rand-any">N importe quel film</button>
+              <button class="rb2" id="rand-mood">Selon mon humeur du moment</button>
+            </div>
+            <textarea id="rand-mood-input" placeholder="Decris rapidement ton humeur..." style="display:none;width:100%;background:#fff;border-top:1px solid #404040;border-left:1px solid #404040;border-right:1px solid #fff;border-bottom:1px solid #fff;padding:5px 7px;font-family:inherit;font-size:12px;color:#000;outline:none;resize:none;min-height:48px;margin-bottom:8px"></textarea>
+            <button class="rb2" id="rand-go" style="display:none">Trouver mon film &#8594;</button>
+          </div>
+        </div>
+
+        <div id="donate-popup" style="display:none">
+          <div class="dlg" style="margin:20px auto">
+            <div style="font-size:22px;margin-bottom:8px">&#9829;</div>
+            <div class="dit">Sira t a trouve son film ?</div>
+            <div class="dim2">Sira est gratuit et le restera.<br>Si tu veux soutenir le projet, c est par ici.</div>
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+              <button class="dbt" id="donate-yes">Soutenir Sira &#9829;</button>
+              <button class="dbt" id="donate-no" style="border-color:var(--s2);color:var(--s3)">Peut-etre plus tard</button>
+            </div>
           </div>
         </div>
 
@@ -556,15 +586,23 @@ document.getElementById('tb-sound').addEventListener('click',function(){
 // ── DESKTOP ICON ──────────────────────────────────────────
 document.getElementById('ic-sira').addEventListener('dblclick',()=>{
   playClick();
-  document.getElementById('win').style.animation='none';
-  setTimeout(()=>document.getElementById('win').style.animation='winopen 0.18s ease-out',10);
+  document.getElementById('win').style.display='';document.getElementById('win').style.transform='';document.getElementById('win').style.opacity='';
+});
+
+document.getElementById('ic-trash').addEventListener('dblclick',()=>{
+  playClick();
+  const body=document.getElementById('hbody'),emp=document.getElementById('hemp'),htab=document.getElementById('htable');
+  body.innerHTML='';
+  if(!hist.length){emp.style.display='block';htab.style.display='none'}
+  else{emp.style.display='none';htab.style.display='table';hist.slice().reverse().forEach(h=>{const tr=document.createElement('tr');tr.innerHTML='<td><strong>'+h.title+'</strong></td><td>'+h.year+'</td><td>'+(h.rating?'\u2605'.repeat(h.rating):'&mdash;')+'</td><td style="color:#666">'+h.mood+'...</td>';body.appendChild(tr)})}
+  show('hp');setS('Historique de session');
 });
 
 // ── APP LOGIC ─────────────────────────────────────────────
 const MAX=10;
 let used=0,mode='solo',af='',hist=[],seen=[],crec=null,cmood='',crat=0;
 const slots=[document.getElementById('s1'),document.getElementById('s2'),document.getElementById('s3'),document.getElementById('s4'),document.getElementById('s5'),document.getElementById('s6'),document.getElementById('s7'),document.getElementById('s8'),document.getElementById('s9'),document.getElementById('s10')];
-const panels={ip:document.getElementById('ip'),lp:document.getElementById('lp'),rp:document.getElementById('rp'),hp:document.getElementById('hp'),pp:document.getElementById('pp')};
+const panels={ip:document.getElementById('ip'),lp:document.getElementById('lp'),rp:document.getElementById('rp'),hp:document.getElementById('hp'),pp:document.getElementById('pp'),dp:document.getElementById('dp'),donate:document.getElementById('donate-popup')};
 const pb=document.getElementById('pb'),lmsg=document.getElementById('lmsg'),sl=document.getElementById('sl'),t2=document.getElementById('toast2');
 const mi2=document.getElementById('mi2'),sbtn=document.getElementById('sbtn'),errmsg=document.getElementById('errmsg');
 
@@ -633,6 +671,10 @@ async function analyze(mood){
     if(used>=5){
       const db=document.getElementById('donate-bar');
       db.style.display='flex';
+    }
+    // Show donate popup after 3rd reco
+    if(used===3){
+      setTimeout(()=>{show('donate');setS('Sira t a trouve son film ?')},1500);
     }
     setTimeout(()=>showNotif('Film trouvé !',rec.title+' ('+rec.year+')'),400);
   },350);
@@ -711,6 +753,35 @@ document.getElementById('ic-sira').addEventListener('dblclick',()=>{
 // Add click sounds to all .mi items
 document.querySelectorAll('.mi').forEach(m=>m.addEventListener('click',()=>playClick()));
 document.querySelectorAll('.wb').forEach(w=>w.addEventListener('click',()=>playClick()));
+
+// Donate sidebar
+document.getElementById('ic-donate-side').addEventListener('click',()=>{playClick();window.open('https://buy.stripe.com/dRm14oe3y7D8bhh4cm3Ru00','_blank')});
+
+// Random discovery
+document.getElementById('tb-random').addEventListener('click',()=>{playClick();show('dp');setS('Decouverte aleatoire')});
+document.getElementById('rand-mood').addEventListener('click',()=>{
+  playClick();
+  document.getElementById('rand-mood-input').style.display='block';
+  document.getElementById('rand-go').style.display='inline-block';
+});
+document.getElementById('rand-any').addEventListener('click',async()=>{
+  playClick();
+  if(used>=MAX){show('pp');return}
+  const moods=['je veux etre surpris par un film que je n aurais jamais choisi moi-meme','recommande moi un chef d oeuvre meconnu','je veux un film qui me marque pour longtemps','surprends-moi avec quelque chose d inattendu'];
+  const random=moods[Math.floor(Math.random()*moods.length)];
+  await analyze(random);
+});
+document.getElementById('rand-go').addEventListener('click',async()=>{
+  playClick();
+  const m=document.getElementById('rand-mood-input').value.trim();
+  if(!m)return;
+  if(used>=MAX){show('pp');return}
+  await analyze(m);
+});
+
+// Donate popup handlers
+document.getElementById('donate-yes').addEventListener('click',()=>{playClick();window.open('https://buy.stripe.com/dRm14oe3y7D8bhh4cm3Ru00','_blank');show('rp')});
+document.getElementById('donate-no').addEventListener('click',()=>{playClick();show('rp')});
 
 updSlots();show('ip');
 </script>
